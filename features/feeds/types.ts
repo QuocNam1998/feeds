@@ -1,5 +1,24 @@
 export type FeedStatus = "connected" | "disconnected" | "error";
 
+export type WorkerConnectCommand = Extract<FeedCommand, { type: "CONNECT" }> & {
+  wsUrl: string;
+};
+
+export type WorkerCommand = WorkerConnectCommand | Exclude<FeedCommand, { type: "CONNECT" }>;
+
+export type MarketSample = {
+  symbol: string;
+  price: number;
+  volume: number;
+};
+
+export type MarketSnapshot = {
+  id: number;
+  type: "market_snapshot";
+  symbol: null;
+  samples: MarketSample[];
+  ts: string;
+};
 export type FeedMessage =
   | {
       type: "STATUS";
@@ -7,7 +26,7 @@ export type FeedMessage =
     }
   | {
       type: "MESSAGE";
-      payload: string;
+      payload: FeedEvent;
     };
 
 export type FeedCommand =
@@ -22,7 +41,7 @@ export type FeedCommand =
       payload: string;
     };
 
-export type FeedEventType = "price_update" | "user_joined" | "ping" | "echo" | "raw";
+export type FeedEventType = "price_update" | "user_joined" | "ping" | "echo" | "market_snapshot" | "raw";
 
 export type FeedEvent = {
   id?: number;

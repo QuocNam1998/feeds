@@ -3,7 +3,7 @@
 import FeedsButton from "@/features/feeds/components/FeedsButton";
 import { TAG } from "@/features/feeds/datas";
 import { createWebSocketFeed } from "@/features/feeds/services/webSocketFeed";
-import type { FeedEvent, FeedItem, FeedMessage, FeedStatus, FeedWorker } from "@/features/feeds/types";
+import type { FeedItem, FeedMessage, FeedStatus, FeedWorker } from "@/features/feeds/types";
 import { useEffect, useRef, useState } from "react";
 
 type FeedsClientProps = {
@@ -12,6 +12,7 @@ type FeedsClientProps = {
 
 function FeedsClient({ wsUrl }: FeedsClientProps) {
   const workerRef = useRef<FeedWorker | null>(null);
+  const messagesListRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -22,7 +23,13 @@ function FeedsClient({ wsUrl }: FeedsClientProps) {
   useEffect(() => () => workerRef.current?.terminate(), []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const list = messagesListRef.current;
+    if (!list) return;
+
+    const distanceFromBottom = list.scrollHeight - list.scrollTop - list.clientHeight;
+    if (distanceFromBottom < 80) {
+      messagesEndRef.current?.scrollIntoView({ block: "end" });
+    }
   }, [messages]);
 
   const connect = () => {
@@ -30,12 +37,7 @@ function FeedsClient({ wsUrl }: FeedsClientProps) {
     const worker = createWebSocketFeed(wsUrl, (msg: FeedMessage) => {
       if (msg.type === "STATUS") setStatus(msg.payload);
       if (msg.type === "MESSAGE") {
-        try {
-          const parsed = JSON.parse(msg.payload) as FeedEvent;
-          setMessages((prev) => [...prev.slice(-49), { ...parsed, _key: `${Date.now()}-${Math.random()}` }]);
-        } catch {
-          setMessages((prev) => [...prev.slice(-49), { _key: `${Date.now()}`, type: "raw", symbol: null, value: msg.payload, ts: new Date().toISOString() }]);
-        }
+        setMessages((prev) => [...prev.slice(-49), { ...msg.payload, _key: `${Date.now()}-${Math.random()}` }]);
       }
     });
     worker.postMessage({ type: "CONNECT" });
@@ -94,7 +96,7 @@ function FeedsClient({ wsUrl }: FeedsClientProps) {
           <span>LIVE FEED</span>
           <span>{messages.length} msgs</span>
         </div>
-        <div className="feeds-list">
+        <div className="feeds-list" ref={messagesListRef}>
           {messages.length === 0 && (
             <div className="feeds-empty">
               Press CONNECT to open the WebSocket

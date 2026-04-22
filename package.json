@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env PORT=4000 next dev",
-    "ws:dev": "node scripts/fake-ws-server.mjs",
+    "ws:dev": "node server/fake-ws-server.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

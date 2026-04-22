@@ -99,6 +99,8 @@ body {
   font-size: 11px;
   color: #64748b;
   line-height: 1.8;
+  display: flex;
+  gap: 12px;
 }
 
 .feeds-architecture-source {
