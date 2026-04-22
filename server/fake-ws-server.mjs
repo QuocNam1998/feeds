@@ -5,6 +5,7 @@ const PORT = Number(process.env.WS_PORT ?? 4001);
 const WS_MAGIC_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
 const clients = new Set();
+let feedTimer = null;
 let msgCount = 0;
 
 function randomEvent() {
@@ -121,6 +122,28 @@ function broadcast(text) {
   }
 }
 
+function startFeed() {
+  if (feedTimer) return;
+
+  feedTimer = setInterval(() => {
+    broadcast(createFeedPayload(randomEvent()));
+  }, 1500);
+}
+
+function stopFeed() {
+  if (!feedTimer || clients.size > 0) return;
+
+  clearInterval(feedTimer);
+  feedTimer = null;
+}
+
+function removeClient(socket) {
+  if (!clients.delete(socket)) return;
+
+  console.log(`Client disconnected. Active clients: ${clients.size}`);
+  stopFeed();
+}
+
 const server = createServer((_, response) => {
   response.writeHead(426, { "Content-Type": "text/plain" });
   response.end("This endpoint expects a WebSocket connection.\n");
@@ -144,6 +167,7 @@ server.on("upgrade", (request, socket) => {
   ].join("\r\n"));
 
   clients.add(socket);
+  startFeed();
   console.log(`Client connected. Active clients: ${clients.size}`);
 
   socket.on("data", (buffer) => {
@@ -160,20 +184,13 @@ server.on("upgrade", (request, socket) => {
   });
 
   socket.on("close", () => {
-    clients.delete(socket);
-    console.log(`Client disconnected. Active clients: ${clients.size}`);
+    removeClient(socket);
   });
 
   socket.on("error", () => {
-    clients.delete(socket);
+    removeClient(socket);
   });
 });
-
-setInterval(() => {
-  if (clients.size > 0) {
-    broadcast(createFeedPayload(randomEvent()));
-  }
-}, 1500);
 
 server.listen(PORT, () => {
   console.log(`Fake WebSocket feed running at ws://localhost:${PORT}`);
