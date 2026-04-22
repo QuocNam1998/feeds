@@ -10,21 +10,48 @@ let msgCount = 0;
 function randomEvent() {
   const r = Math.random();
 
-  if (r < 0.45) return { type: "price_update", symbol: "BTC", value: (29000 + Math.random() * 2000).toFixed(2) };
-  if (r < 0.8) return { type: "price_update", symbol: "ETH", value: (1800 + Math.random() * 200).toFixed(2) };
-  if (r < 0.92) return { type: "user_joined", symbol: null, value: `User_${Math.floor(Math.random() * 9999)}` };
+  if (r < 0.6) return createMarketSnapshot();
+  if (r < 0.78) return { type: "price_update", symbol: "BTC", value: (29000 + Math.random() * 2000).toFixed(2) };
+  if (r < 0.9) return { type: "price_update", symbol: "ETH", value: (1800 + Math.random() * 200).toFixed(2) };
+  if (r < 0.97) return { type: "user_joined", symbol: null, value: `User_${Math.floor(Math.random() * 9999)}` };
 
   return { type: "ping", symbol: null, value: "pong" };
 }
 
+function createMarketSnapshot() {
+  const symbols = ["BTC", "ETH", "SOL", "BNB", "XRP"];
+  const samples = Array.from({ length: 12000 }, (_, index) => {
+    const symbol = symbols[index % symbols.length];
+    const basePrice = symbol === "BTC" ? 30000 : symbol === "ETH" ? 1900 : symbol === "SOL" ? 120 : symbol === "BNB" ? 580 : 0.6;
+
+    return {
+      symbol,
+      price: Number((basePrice + Math.sin(index / 17) * basePrice * 0.015 + Math.random() * basePrice * 0.01).toFixed(4)),
+      volume: Number((10 + Math.random() * 250).toFixed(4)),
+    };
+  });
+
+  return {
+    type: "market_snapshot",
+    symbol: null,
+    samples,
+  };
+}
+
 function createFeedPayload(event) {
-  return JSON.stringify({
+  const payload = {
     id: ++msgCount,
     type: event.type,
     symbol: event.symbol,
     value: event.value,
     ts: new Date().toISOString(),
-  });
+  };
+
+  if (Array.isArray(event.samples)) {
+    payload.samples = event.samples;
+  }
+
+  return JSON.stringify(payload);
 }
 
 function createAcceptKey(webSocketKey) {

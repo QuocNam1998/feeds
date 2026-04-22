@@ -7,4 +7,5 @@ export const TAG: Tag = {
     user_joined:  { bg: "#1a1a2e", color: "#818cf8", label: "USER"  },
     ping:         { bg: "#1c1008", color: "#f59e0b", label: "PING"  },
     echo:         { bg: "#1a0a0a", color: "#f87171", label: "ECHO"  },
+    market_snapshot: { bg: "#082f49", color: "#38bdf8", label: "WORKER" },
 };
