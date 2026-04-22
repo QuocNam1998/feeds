@@ -24,3 +24,282 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.feeds-page {
+  min-height: 100vh;
+  background: #080b0f;
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 16px;
+}
+
+.feeds-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e2a38;
+  padding-bottom: 16px;
+}
+
+.feeds-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.feeds-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.feeds-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feeds-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 0.3s;
+  background: #475569;
+}
+
+.feeds-status-dot--connected {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.feeds-status-dot--error {
+  background: #ef4444;
+}
+
+.feeds-status-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #475569;
+}
+
+.feeds-status-label--connected {
+  color: #22c55e;
+}
+
+.feeds-architecture {
+  background: #0d1520;
+  border: 1px solid #1e2a38;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.feeds-architecture-source {
+  color: #38bdf8;
+}
+
+.feeds-architecture-client {
+  color: #a78bfa;
+}
+
+.feeds-architecture-server {
+  color: #22c55e;
+}
+
+.feeds-controls,
+.feeds-send {
+  display: flex;
+  gap: 8px;
+}
+
+.feeds-button {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.feeds-button:disabled {
+  cursor: not-allowed;
+}
+
+.feeds-button--connect {
+  background: #0d2b1a;
+  color: #166534;
+}
+
+.feeds-button--connect.feeds-button--active {
+  background: #16a34a;
+  color: #fff;
+}
+
+.feeds-button--disconnect {
+  background: #1a0a0a;
+  color: #7f1d1d;
+}
+
+.feeds-button--disconnect.feeds-button--active {
+  background: #dc2626;
+  color: #fff;
+}
+
+.feeds-clear-button {
+  margin-left: auto;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #1e2a38;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.feeds-panel {
+  flex: 1;
+  background: #0a0e14;
+  border: 1px solid #1e2a38;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  max-height: 400px;
+}
+
+.feeds-panel-header {
+  padding: 8px 14px;
+  border-bottom: 1px solid #1e2a38;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #334155;
+  display: flex;
+  justify-content: space-between;
+}
+
+.feeds-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+}
+
+.feeds-empty {
+  text-align: center;
+  color: #1e3a5f;
+  margin-top: 60px;
+  font-size: 12px;
+}
+
+.feeds-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #0d1520;
+  font-size: 12px;
+  animation: feeds-fade-in 0.2s ease;
+}
+
+.feeds-time {
+  color: #1e3a5f;
+  min-width: 70px;
+  font-size: 10px;
+}
+
+.feeds-tag {
+  padding: 1px 7px;
+  border-radius: 3px;
+  background: #111;
+  color: #94a3b8;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  min-width: 48px;
+  text-align: center;
+}
+
+.feeds-tag--price_update {
+  background: #0d2b1a;
+  color: #22c55e;
+}
+
+.feeds-tag--user_joined {
+  background: #1a1a2e;
+  color: #818cf8;
+}
+
+.feeds-tag--ping {
+  background: #1c1008;
+  color: #f59e0b;
+}
+
+.feeds-tag--echo {
+  background: #1a0a0a;
+  color: #f87171;
+}
+
+.feeds-symbol {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.feeds-value {
+  color: #cbd5e1;
+}
+
+.feeds-input {
+  flex: 1;
+  background: #0a0e14;
+  border: 1px solid #1e2a38;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+
+.feeds-input:disabled {
+  opacity: 0.4;
+}
+
+.feeds-send-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  background: #1d4ed8;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.feeds-send-button:disabled {
+  background: #0d1520;
+  color: #1e3a5f;
+  cursor: not-allowed;
+}
+
+@keyframes feeds-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
